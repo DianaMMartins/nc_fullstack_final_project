@@ -8,6 +8,7 @@ const PORT = process.env.PORT || 4040;
 const io = new Server(server, {
   cors: {
     origin: "https://dashing-dragon-fbfd86.netlify.app",
+    // origin: "http://localhost:3000",
   },
 });
 const mongoose = require("mongoose");
@@ -35,6 +36,7 @@ for (let i = 0; i < 10; i++) {
 }
 
 io.on("connection", (socket) => {
+
   playerIds.push(socket.id);
 
   console.log(socket.id, " has connected");
@@ -122,8 +124,10 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
-    const idIndex = playerIds.indexOf(socket.id);
-    playerIds.splice(idIndex, 1);
+    if (playerIds.indexOf(socket.id)) {
+      const idIndex = playerIds.indexOf(socket.id);
+      playerIds.splice(idIndex, 1);
+    }
 
     console.log(socket.id, " has disconnected");
     console.log(playerIds, " on disconnect");
